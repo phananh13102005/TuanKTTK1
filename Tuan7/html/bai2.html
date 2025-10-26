@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Bài 2</title>
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/jquery-3.7.1.min.js"></script>
+		<script src="../js/bootstrap.js"></script>
+	</head>
+	<style>
+    body {
+      font-family: "Times New Roman", Times, serif;
+      background-color: #e8f0ff;
+    }
+    th {
+      text-align: center;
+    }
+    .table-primary th {
+      background-color: #cfe2ff;
+    }
+    .border-black {
+      border: 1px solid black !important;
+    }
+    .img-fluid {
+      max-height: 120px;
+    }
+    .text-success {
+      color: green !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid p-0 m-0">
+    <!-- Banner -->
+    <div class="p-0">
+      <img src="../images/banner_car.jpg" alt="banner" class="img-fluid w-100">
+    </div>
+
+    <div class="row p-2">
+      <!-- Bảng tin thị trường -->
+      <div class="col-3">
+        <table class="table table-primary text-center align-middle table-bordered border-black">
+          <tr><th colspan="2">Bảng tin thị trường</th></tr>
+          <tr><th colspan="2">Vàng</th></tr>
+          <tr><th>Mua vào</th><th>Bán ra</th></tr>
+          <tr><td id="goldBuy"></td><td id="goldSell"></td></tr>
+          <tr><th colspan="2">USD</th></tr>
+          <tr><th>Mua vào</th><th>Bán ra</th></tr>
+          <tr><td id="usdBuy"></td><td id="usdSell"></td></tr>
+        </table>
+      </div>
+
+      <!-- Form cập nhật -->
+      <div class="col-5">
+        <table class="table table-primary table-bordered border-black">
+          <tr>
+            <th colspan="3" class="text-center">Cập nhật giá cả thị trường</th>
+          </tr>
+          <tr>
+            <th><label for="txtIncome">Mua vào</label></th>
+            <td><input type="number" id="txtIncome" class="form-control" autofocus></td>
+          </tr>
+          <tr>
+            <th><label for="txtOutcome">Bán ra</label></th>
+            <td><input type="number" id="txtOutcome" class="form-control"></td>
+          </tr>
+          <tr>
+            <th><label for="rbtnType">Loại xe</label></th>
+            <td>
+              <select id="rbtnType" class="form-select">
+                <option value="../images/car1.jpg;35000">Toyota</option>
+                <option value="../images/car2.jpg;15000">KIA</option>
+                <option value="../images/car3.jpg;40000">Ford</option>
+                <option value="../images/car4.jpg;32000">Civic</option>
+                <option value="../images/car5.jpg;50000">Ferrari</option>
+                <option value="../images/car7.jpg;45000">Mercedes</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>Cập nhật cho:</th>
+            <td>
+              <label><input type="radio" name="moneyType" value="1"> Vàng</label>
+              <label class="ms-3"><input type="radio" name="moneyType" value="0"> USD</label>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" class="text-center">
+              <button class="btn btn-primary" id="btnUpdate">Update</button>
+              <button class="btn btn-secondary" id="btnState" disabled>State</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Bảng báo giá -->
+      <div class="col-3">
+        <table class="table table-primary table-bordered border-black text-center">
+          <tr><th>Bảng báo giá</th></tr>
+          <tr>
+            <td>
+              <ul class="text-start">
+                <li>Toyota: 1000 USD</li>
+                <li>KIA: 2000 USD</li>
+                <li>Ford: 3000 USD</li>
+                <li>Civic: 4000 USD</li>
+                <li>Ferrari: 5000 USD</li>
+                <li>Mercedes: 6000 USD</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td><img id="carImage" src="../images/car1.jpg" alt="car" class="img-fluid"></td>
+          </tr>
+          <tr>
+            <td id="carPrice" class="fs-4 text-success fw-bold">Giá: 35000 USD</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const txtIncome = document.getElementById('txtIncome');
+            const btnState = document.getElementById('btnState');
+            const rbtnType = document.getElementsByName('moneyType');
+            const selectCar = document.getElementById('rbtnType');
+            const imgCar = document.querySelector('.col-3 img');
+            const priceDisplay = document.querySelector('.col-3 .fs-4');
+
+            // Function to get the checked value of radio buttons
+            function getCheckedValue(radioButtons) {
+                for (let i = 0; i < radioButtons.length; i++) {
+                    if (radioButtons[i].checked) {
+                        return radioButtons[i].value;
+                    }
+                }
+                return null;
+            }
+
+            // Event listener for the select dropdown
+            selectCar.addEventListener('change', function() {
+                const selectedOption = selectCar.value.split(';');
+                const imgSrc = selectedOption[0].trim();
+                const price = selectedOption[1].trim();
+
+                imgCar.src = imgSrc;
+                priceDisplay.textContent = `Giá: ${price} USD`;
+            });
+
+            // Event listener for the Update button
+            document.getElementById('btnUpdate').addEventListener('click', function() {
+                const incomeValue = parseFloat(txtIncome.value);
+                const outcomeInput = document.getElementById('txtOutcome');
+                const selectedMoneyType = getCheckedValue(rbtnType);
+
+                if (selectedMoneyType === '1') { // Vàng
+                    outcomeInput.value = incomeValue;
+                } else if (selectedMoneyType === '0') { // USD
+                    const selectedOption = selectCar.value.split(';');
+                    const carPrice = parseFloat(selectedOption[1].trim());
+                    outcomeInput.value = incomeValue * carPrice;
+                }
+            });
+
+            // Event listener for the income input blur event
+            txtIncome.addEventListener('blur', function() {
+                const value = txtIncome.value;
+                if (value && !isNaN(value) && value > 0) {
+                    btnState.classList.remove('disabled');
+                } else {
+                    btnState.classList.add('disabled');
+                }
+            });
+        });
+    </script>
+	</body>
+</html>
